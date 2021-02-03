@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('amz/', views.amazon.as_view()),
     path('fb/', views.flipkart.as_view()),
+    path('both/', views.amflip.as_view()),
 
 ]
