@@ -161,7 +161,7 @@ class amflip(APIView):
             }
 
             # result = (description, price, rating, review_count, url)
-            print(result)
+            # print(result)
             return result
 
         def main(search_term):
@@ -248,6 +248,14 @@ class amflip(APIView):
             except:
                 rating = ' '
                 print(rating)
+
+            try:
+                # rank and rating
+                img = item.find('div', attrs={'class': 'CXW8mj'})
+                imgurl=img.img['src']
+            except:
+                imgurl = ' '
+
                 # result = (name, price, rating, url)
             result = {
                         'ProductTypeId': 2,
@@ -255,7 +263,8 @@ class amflip(APIView):
                         'Size': size,
                         'Price': price,
                         'Rating': rating,
-                        'Url': url
+                        'Url': url,
+                        'imgurl':imgurl
                     }
             # print(result)
             records.append(result)
@@ -278,20 +287,22 @@ class amflip(APIView):
                 price = item.find('div', attrs={'class': '_30jeq3'}).get_text()
             except:
                 price = " "
-            # try:
-            #     # rank and rating
-            #     rating = item.find('div', attrs={'class': '_3LWZlK'}).get_text()
-            # except:
-            #     rating = ' '
-            #     print(rating)
+            try:
+                # rank and rating
+                imgurl = item.find('div', attrs={'class': '_396cs4  _3exPp9'}).img['src']
+            except:
+                imgurl = ' '
+
 
                 # result = (name, price, rating, url)
             result = {
                     'ProductTypeId': 2,
                     'ProductName': name,
                     'Price': price,
-                    'Url': url
+                    'Url': url,
+                    'imgurl':imgurl
                 }
+            print(result)
             records.append(result)
         return Response(records)
 
