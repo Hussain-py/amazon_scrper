@@ -40,11 +40,16 @@ class amazon(APIView):
             """Extract and return data from a single record"""
 
             # description and url
-            atag = item.h2.a
-            description = atag.text.strip()
-            url = "https://www.amazon.in/" + atag.get('href')
-            print(url)
-
+            try:
+                atag = item.h2.a
+                url = "https://www.amazon.in/" + atag.get('href')
+                # print(url)
+            except:
+                url = " "
+            try:
+                description = atag.text.strip()
+            except:
+                description = " "
             try:
                 # price
                 price_parent = item.find('span', 'a-price"')
@@ -71,7 +76,7 @@ class amazon(APIView):
             }
 
             # result = (description, price, rating, review_count, url)
-            print(result)
+            # print(result)
             return result
 
         def main(search_term):
@@ -118,10 +123,17 @@ class amflip(APIView):
             """Extract and return data from a single record"""
 
             # description and url
-            atag = item.h2.a
-            description = atag.text.strip()
-            url = "https://www.amazon.in/" + atag.get('href')
-            print(url)
+            try:
+                atag = item.h2.a
+                url = "https://www.amazon.in/" + atag.get('href')
+                print(url)
+            except:
+                url = " "
+
+            try:
+                description = atag.text.strip()
+            except:
+                description = " "
 
             try:
                 # price
@@ -170,7 +182,7 @@ class amflip(APIView):
         main(name)
 
 
-        name = request.query_params.get("Name")
+        # name = request.query_params.get("Name")
 
         search_term = name
         # template = "https://www.flipkart.com/search?q={}"
@@ -180,25 +192,36 @@ class amflip(APIView):
 
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'html.parser')
-        print(soup)
 
         # records = []
         for a in soup.findAll('a', href=True, attrs={'class': '_1fQZEK'}):
-            atag = a.get('href')
+            try:
+                atag = a.get('href')
+                url = "https://www.flipkart.com" + atag
+            except:
+                url = " "
+            try:
+                proName = a.find('div', attrs={'class': '_4rR01T'}).get_text()
+            except:
+                proName = " "
+            try:
+                price = a.find('div', attrs={'class': '_30jeq3 _1_WHN1'}).get_text()
+            except:
+                price = " "
+            try:
+                rating = a.find('div', attrs={'class': '_3LWZlK'}).get_text()
+            except:
+                rating = " "
 
-            name = a.find('div', attrs={'class': '_4rR01T'}).get_text()
-            price = a.find('div', attrs={'class': '_30jeq3 _1_WHN1'}).get_text()
-            rating = a.find('div', attrs={'class': '_3LWZlK'}).get_text()
-            url = "https://www.flipkart.com" + atag
             # result = (name, price, rating, url)
             result = {
                 'ProductTypeId': 2,
-                'ProductName': name,
+                'ProductName': proName,
                 'Price': price,
                 'Rating': rating,
                 'Url': url
                 }
-            print(result)
+            # print(result)
             records.append(result)
         # if records == []:
         for item in soup.findAll('div', attrs={'class': '_4ddWXP'}):
@@ -208,9 +231,9 @@ class amflip(APIView):
             except:
                 url = ""
             try:
-                name = item.find('a', attrs={'class': 's1Q9rs'}).get_text()
+                des = item.find('a', attrs={'class': 's1Q9rs'}).get_text()
             except:
-                name = " "
+                des = " "
             try:
                 size = item.find('div', attrs={'class': '_3Djpdu'}).get_text()
             except:
@@ -228,15 +251,48 @@ class amflip(APIView):
                 # result = (name, price, rating, url)
             result = {
                         'ProductTypeId': 2,
-                        'ProductName': name,
+                        'ProductName': des,
                         'Size': size,
                         'Price': price,
                         'Rating': rating,
                         'Url': url
                     }
-            print(result)
+            # print(result)
             records.append(result)
 
+        for item in soup.findAll('div', attrs={'class': '_1xHGtK _373qXS'}):
+            try:
+                atag = item.find('a', href=True, attrs={'class': '_3bPFwb'}).get('href')
+                url = 'https://www.flipkart.com' + atag
+            except:
+                url = ""
+            # try:
+            #     producttype =item.find('a', attrs={'class': 'IRpwTa _2-ICcC'}).get_text()
+            # except:
+            #     producttype = ""
+            try:
+                name = item.find('div', attrs={'class': '_2WkVRV'}).get_text()
+            except:
+                name = " "
+            try:
+                price = item.find('div', attrs={'class': '_30jeq3'}).get_text()
+            except:
+                price = " "
+            # try:
+            #     # rank and rating
+            #     rating = item.find('div', attrs={'class': '_3LWZlK'}).get_text()
+            # except:
+            #     rating = ' '
+            #     print(rating)
+
+                # result = (name, price, rating, url)
+            result = {
+                    'ProductTypeId': 2,
+                    'ProductName': name,
+                    'Price': price,
+                    'Url': url
+                }
+            records.append(result)
         return Response(records)
 
     def post(self):
@@ -312,6 +368,59 @@ class flipkart(APIView):
                 }
                 print(result)
                 records.append(result)
+        return Response(records)
+    def post(self):
+        pass
+
+
+
+class newf(APIView):
+    def get(self,request):
+        name = request.query_params.get("Name")
+
+        search_term = name
+        # template = "https://www.flipkart.com/search?q={}"
+        template = "https://www.flipkart.com/search?q={}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
+        search = search_term.replace(' ', '+')
+        url = template.format(search)
+
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        records = []
+        for item in soup.findAll('div', attrs={'class': '_1xHGtK _373qXS'}):
+            try:
+                atag = item.find('a', href=True, attrs={'class': '_3bPFwb'}).get('href')
+                url = 'https://www.flipkart.com' + atag
+            except:
+                url = ""
+            # try:
+            #     producttype =item.find('a', attrs={'class': 'IRpwTa _2-ICcC'}).get_text()
+            # except:
+            #     producttype = ""
+            try:
+                name = item.find('div', attrs={'class': '_2WkVRV'}).get_text()
+            except:
+                name = " "
+            try:
+                price = item.find('div', attrs={'class': '_30jeq3'}).get_text()
+            except:
+                price = " "
+            # try:
+            #     # rank and rating
+            #     rating = item.find('div', attrs={'class': '_3LWZlK'}).get_text()
+            # except:
+            #     rating = ' '
+            #     print(rating)
+
+                # result = (name, price, rating, url)
+            result = {
+                    'ProductTypeId': 2,
+                    'ProductName': name,
+                    'Price': price,
+                    'Url': url
+                }
+            records.append(result)
         return Response(records)
     def post(self):
         pass

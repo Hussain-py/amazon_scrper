@@ -21,5 +21,6 @@ urlpatterns = [
     path('amz/', views.amazon.as_view()),
     path('fb/', views.flipkart.as_view()),
     path('both/', views.amflip.as_view()),
+    path('n/', views.newf.as_view()),
 
 ]
