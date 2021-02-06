@@ -121,3 +121,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATICT_DIR,]
+
+#
+# from apiclient.discovery import build
+# from httplib2 import Http, ProxyInfo
+# from oauth2client import file, client
+# from httplib2 import socks
+# from urllib.parse import urlparse
+#
+# proxy_netloc = urlparse(os.environ.get("http_proxy")).netloc.split[":"]
+# service = build('drive', 'v3', http=Http(proxy_info=httplib2.ProxyInfo(proxy_type=socks.PROXY_TYPE_HTTP, proxy_host=proxy_netloc[0], proxy_port=int(proxy_netloc[1])))
