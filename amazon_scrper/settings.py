@@ -14,7 +14,8 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATICT_DIR = os.path.join(BASE_DIR, "static")
+# STATICT_DIR = os.path.join(BASE_DIR, "static")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -119,10 +120,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [STATICT_DIR,]
 
-#
+# STATICFILES_DIRS = [STATICT_DIR,]
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # from apiclient.discovery import build
 # from httplib2 import Http, ProxyInfo
 # from oauth2client import file, client
@@ -131,3 +139,4 @@ STATICFILES_DIRS = [STATICT_DIR,]
 #
 # proxy_netloc = urlparse(os.environ.get("http_proxy")).netloc.split[":"]
 # service = build('drive', 'v3', http=Http(proxy_info=httplib2.ProxyInfo(proxy_type=socks.PROXY_TYPE_HTTP, proxy_host=proxy_netloc[0], proxy_port=int(proxy_netloc[1])))
+
