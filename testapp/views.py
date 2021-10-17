@@ -1,7 +1,4 @@
 from django.shortcuts import render
-from django.shortcuts import render
-from django.shortcuts import render
-from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -20,11 +17,6 @@ class amazon(APIView):
         records = []
         def get_url(search_term):
             """Generate a url from search term"""
-            # template = "https://www.amazon.com/s?k={}&crid=Z2EH4B071EU6&sprefix=ul%2Caps%2C419&ref=nb_sb_ss_ts-a-p_2_2"
-            # template = "https://www.amazon.in/s?k={}&crid=13QL756WSFKPH&sprefix=led+%2Caps%2C318&ref=nb_sb_ss_ts-a-p_1_4"
-            # template = "https://www.amazon.in/s?k={}&rh=n%3A1389401031&ref=nb_sb_nosss"
-            # template = "https://www.amazon.com/s?k={}&crid=Z2EH4B071EU6&sprefix=ul%2Caps%2C419&ref=nb_sb_ss_ts-a-p_2_2"
-            # template = "https://www.amazon.in/s?k={}&rh=n%3A1389401031&ref=nb_sb_nosss"
             template = "https://www.amazon.in/s?k={}"
             # search_term = search_term.replace(' ', '+')
             search_term = search_term
@@ -32,8 +24,6 @@ class amazon(APIView):
             # add term query to url
             url = template.format(search_term)
 
-            # add page query placeholder
-            # url += '&page{}'
             return url
 
         def extract_record(item):
@@ -43,7 +33,6 @@ class amazon(APIView):
             try:
                 atag = item.h2.a
                 url = "https://www.amazon.in/" + atag.get('href')
-                # print(url)
             except:
                 url = " "
             try:
